@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base styles */
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex justify-center py-10 px-4">
+    
+    <div class="container max-w-2xl bg-gray-800 p-6 rounded-lg shadow-xl">
+        <h1 class="text-3xl font-bold mb-6 text-center border-b border-gray-600 pb-4">Interactive Resume Builder</h1>
+        
+        <form id="resumeForm">
+            <!-- 1. Name Box (Fixed) -->
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium mb-2 text-gray-300">Name:</label>
+                <input type="text" id="name" name="name" required placeholder="John Doe" 
+                       class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- 2. Title Box (Fixed) -->
+            <div class="mb-4">
+                <label for="title" class="block text-sm font-medium mb-2 text-gray-300">Job Title:</label>
+                <input type="text" id="title" name="title" placeholder="Software Engineer" 
+                       class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- 3. Email Box (Fixed Label) -->
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium mb-2 text-gray-300">Email:</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" 
+                       class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- Phone Box -->
+            <div class="mb-4">
+                <label for="phone" class="block text-sm font-medium mb-2 text-gray-300">Phone:</label>
+                <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" 
+                       class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- Address -->
+            <div class="mb-4">
+                <label for="address" class="block text-sm font-medium mb-2 text-gray-300">Address:</label>
+                <textarea id="address" name="address" rows="2" 
+                          class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- Objective -->
+            <div class="mb-4">
+                <label for="objective" class="block text-sm font-medium mb-2 text-gray-300">Professional Summary / Objective:</label>
+                <textarea id="objective" name="objective" rows="3" 
+                          class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- Education -->
+            <div class="mb-4">
+                <label for="education" class="block text-sm font-medium mb-2 text-gray-300">Education:</label>
+                <textarea id="education" name="education" rows="3" 
+                          class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- Experience -->
+            <div class="mb-4">
+                <label for="experience" class="block text-sm font-medium mb-2 text-gray-300">Work Experience:</label>
+                <textarea id="experience" name="experience" rows="4" 
+                          class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- Skills -->
+            <div class="mb-4">
+                <label for="skills" class="block text-sm font-medium mb-2 text-gray-300">Skills:</label>
+                <textarea id="skills" name="skills" rows="3" 
+                          class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- Certifications -->
+            <div class="mb-6">
+                <label for="certifications" class="block text-sm font-medium mb-2 text-gray-300">Certifications/Licenses:</label>
+                <textarea id="certifications" name="certifications" rows="2" 
+                          class="block w-full p-2.5 text-sm text-gray-200 bg-gray-700 border border-gray-600 rounded focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-200">Generate Resume</button>
+        </form>
+
+        <!-- Resume Output Area -->
+        <div id="output-area" class="mt-8 hidden">
+            <h2 class="text-2xl font-bold mb-4 border-b border-gray-600 pb-2">Generated Resume:</h2>
+            <div id="generated-resume" class="bg-white text-gray-900 p-8 rounded shadow-lg">
+                <!-- Resume content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('resumeForm');
+        const generatedResume = document.getElementById('generated-resume');
+        const outputArea = document.getElementById('output-area');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Get values
+            const name = document.getElementById('name').value;
+            const title = document.getElementById('title').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const objective = document.getElementById('objective').value;
+            const education = document.getElementById('education').value;
+            const experience = document.getElementById('experience').value;
+            const skills = document.getElementById('skills').value;
+            const certifications = document.getElementById('certifications').value;
+
+            // Simple line break to HTML conversion for textareas
+            const formatText = (text) => text.replace(/\n/g, '<br>');
+
+            const resume = `
+                <div class="border-b-2 border-gray-800 pb-4 mb-4">
+                    <h1 class="text-4xl font-bold text-gray-900 uppercase tracking-wider">${name}</h1>
+                    <h2 class="text-xl text-blue-700 font-semibold mt-1">${title}</h2>
+                    <div class="text-sm text-gray-600 mt-2">
+                        ${email} | ${phone} <br> ${address}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase">Objective</h3>
+                    <p class="text-gray-700">${formatText(objective)}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase">Experience</h3>
+                    <p class="text-gray-700">${formatText(experience)}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase">Education</h3>
+                    <p class="text-gray-700">${formatText(education)}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase">Skills</h3>
+                    <p class="text-gray-700">${formatText(skills)}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase">Certifications</h3>
+                    <p class="text-gray-700">${formatText(certifications)}</p>
+                </div>
+            `;
+
+            generatedResume.innerHTML = resume;
+            outputArea.classList.remove('hidden');
+            
+            // Scroll to the resume
+            outputArea.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
